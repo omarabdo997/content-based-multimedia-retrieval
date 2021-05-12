@@ -1,8 +1,10 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, ARRAY, create_engine, MetaData, Table
+from sqlalchemy import (Column, Integer, String, Float,
+                        ForeignKey, ARRAY, create_engine, MetaData, JSON)
 from sqlalchemy.orm import relationship, backref, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy_utils import database_exists, create_database
 from dotenv import dotenv_values
+from json import dumps
 
 
 def load_connection_info():
@@ -38,13 +40,14 @@ def insert_image(session, input_image):
     # "url": "./shaas.png",
     # "avg_color": [240, 150, 100],
     # "histogram": [[22, 88], [1, 2]],
-    # "contents": ["sasa", "sosy"],
-    # "video_id": None,
+    # "objects_freq": { "flower": 2, "sea": 1},
+    # "objects_count": 3,
     # }
     image = Image(url=input_image.get("url"),
                   avg_color=input_image.get("avg_color"),
                   histogram=input_image.get("histogram"),
-                  contents=input_image.get("contents"),
+                  objects_freq=dumps(input_image.get("objects_freq")),
+                  objects_count=input_image.get("objects_count"),
                   )
     try:
         session.add(image)
@@ -64,7 +67,8 @@ def insert_video(session, input_video):
     #             "url": "./Reiner.png",
     #             "avg_color": [1,2,3],
     #             "histogram": [[1,2], [3,4]],
-    #             "contents": ["titan1, titan2"]
+    #             "objects_freq": { "flower": 2, "sea": 1},
+    #             "objects_count": 3
     #         },]
     #     }
 
@@ -84,7 +88,8 @@ def insert_video(session, input_video):
         #         image = Image(url=frame["url"],
         #                       avg_color=frame["avg_color"],
         #                       histogram=frame["histogram"],
-        #                       contents=frame["contents"],
+        #                       objects_freq=dumps(frame["objects_freq"]),
+        #                       objects_count=frame["objects_count"],
         #                       video_id=frame["video_id"]
         #                       )
 
@@ -107,7 +112,8 @@ class Image(Base):
     url = Column(String, nullable=False, unique=True)
     avg_color = Column(ARRAY(Integer), nullable=False)
     histogram = Column(ARRAY(Float, dimensions=2), nullable=False)
-    contents = Column(ARRAY(String), nullable=False)
+    objects_freq = Column(JSON, nullable=False)
+    objects_count = Column(Integer, nullable=False)
     video_id = Column(Integer, ForeignKey("video.id", ondelete="cascade"))
 
     def __repr__(self):
@@ -116,7 +122,8 @@ class Image(Base):
            - id: {self.id}
            - url: {self.url}
            - avg_color: RGB({self.avg_color[0]},{self.avg_color[1]},{self.avg_color[2]})
-           - contents: {self.contents}
+           - objects_freq: {self.objects_freq}
+           - objects_count: {self.objects_count}
            - video_id: {self.video_id}
         """
 
