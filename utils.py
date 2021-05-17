@@ -78,3 +78,12 @@ def get_objects(path):
         else:
             objects_freq[detected_object["name"]] = 1
     return objects_freq, len(detections)
+
+
+def compare_object_based(input_frame, stored_frame):
+    common_objects = 0.0
+    for object_name in input_frame.objects_freq.keys():
+        if object_name in stored_frame.objects_freq:
+            common_objects += min(stored_frame.objects_freq[object_name], 
+                                  input_frame.objects_freq[object_name])
+    return common_objects / stored_frame.total_count
