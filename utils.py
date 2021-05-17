@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
+from imageai.Detection import ObjectDetection
+import osv
 
 def calc_histogram(image):
     """
@@ -54,3 +56,25 @@ def compare_Hist(hist_input , hist_img):
 # h1 = calc_histogram(src_base)
 # h2 = calc_histogram(src_test1)
 # print (compare_Hist(h1,h2))  
+
+
+def get_objects(path):
+    execution_path = os.getcwd()
+    detector = ObjectDetection()    
+    detector.setModelTypeAsRetinaNet()
+    detector.setModelPath( os.path.join(execution_path , "images/resnet50_coco_best_v2.1.0.h5"))
+    detector.loadModel()
+
+    # construct output path
+    separated_path = path.split(".")
+    output_path = path[:-1 - len(separated_path[-1])] + "_detected." + separated_path[-1]
+    
+    detections = detector.detectObjectsFromImage(input_image=os.path.join(execution_path , path), output_image_path=os.path.join(execution_path , output_path))
+
+    objects_freq = {}
+    for detected_object in detections:
+        if detected_object["name"] in objects_freq:
+            objects_freq[detected_object["name"]] += 1
+        else:
+            objects_freq[detected_object["name"]] = 1
+    return objects_freq, len(detections)
