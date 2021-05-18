@@ -40,10 +40,11 @@ def compare_Hist(hist_input , hist_img):
     :return: "false", when the value of compression is smaller then 0.5
     """
     compare_value = cv2.compareHist(hist_input, hist_img, cv2.HISTCMP_CORREL)
-    if compare_value >= 0.5:
-        return "true" 
-    else:
-        return "false"
+    # if compare_value >= 0.5:
+    #     return "true" 
+    # else:
+    #     return "false"
+    return compare_value 
 
 # ###to test  calc_histogram && compare_Hist functions
 # src_base = cv2.imread('test_images/Histogram_Comparison_Source_0.jpg')
