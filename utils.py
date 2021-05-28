@@ -87,3 +87,17 @@ def compare_object_based(input_frame, stored_frame):
             common_objects += min(stored_frame.objects_freq[object_name], 
                                   input_frame.objects_freq[object_name])
     return common_objects / stored_frame.total_count
+
+
+def avgColor (img):
+    height, width, _ = np.shape(img)
+    avg_color_per_row = np.average(img, axis=0)
+    avg_colors = np.average(avg_color_per_row, axis=0)
+    int_averages = np.array(avg_colors, dtype=np.uint64)
+    # for checking 
+    average_image = np.zeros((height, width, 3), np.uint8)
+    average_image[:] = int_averages
+    # cv2.imshow("Avg Color", np.hstack([img, average_image]))
+    # plt.show()
+    return int_averages
+
