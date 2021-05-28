@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 import cv2
 import numpy as np
 from imageai.Detection import ObjectDetection
-import osv
+import os
+from json import loads
 
 def calc_histogram(image):
     """
@@ -82,8 +83,9 @@ def get_objects(path):
 
 def compare_object_based(input_frame, stored_frame):
     common_objects = 0.0
-    for object_name in input_frame.objects_freq.keys():
+    for object_name in input_frame["objects_freq"].keys():
         if object_name in stored_frame.objects_freq:
-            common_objects += min(stored_frame.objects_freq[object_name], 
-                                  input_frame.objects_freq[object_name])
-    return common_objects / stored_frame.total_count
+            common_objects += min(loads(stored_frame.objects_freq)[object_name],
+                                input_frame['objects_freq'][object_name])
+
+    return common_objects / stored_frame.objects_count
