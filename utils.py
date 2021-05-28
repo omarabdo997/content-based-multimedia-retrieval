@@ -101,3 +101,15 @@ def avgColor (img):
     # plt.show()
     return int_averages
 
+def colourDistance ( img1,  img2):
+    rmean = ( img1[0] + img2[0] )/2
+    r = float(img1[0]) - float(img2[0])
+    g = float(img1[1]) - float(img2[1])
+    b = float(img1[2]) - float(img2[2])
+    weightR = 2 + rmean/256
+    weightG = 4.0
+    weightB = 2 + (255-rmean)/256
+    colorDis =  np.sqrt(weightR*r*r + weightG*g*g + weightB*b*b)
+    maxColDist = 764.8339663572415;
+    similarity = round(((maxColDist-colorDis)/maxColDist)*100)
+    return similarity
