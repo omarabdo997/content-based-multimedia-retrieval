@@ -11,12 +11,15 @@ class Controller:
 
     def insert_image(self, image_url):
         image = cv2.imread(image_url)
-        avg_color = [55, 10, 200]
+        if image is None:
+            return "Please enter a valid image url!"
+        avg_color = utils.avgColor(image)
+        print(avg_color)
         histogram = utils.calc_histogram(image).tolist()
         objects_freq, objects_count = utils.get_objects(image_url)
         img = {
             "url": image_url,
-            "avg_color": avg_color,
+            "avg_color": avg_color.tolist(),
             "histogram": histogram,
             "objects_freq": objects_freq,
             "objects_count": objects_count,
@@ -26,16 +29,18 @@ class Controller:
 
     def search_for_images(self, input_url, criteria):
         input_image = cv2.imread(input_url)
+        if input_image is None:
+            return "Please enter a valid image url!"
 
         images = self.session.query(Image).all()
         images_arr = []
 
         if criteria == "avg_color":
-            # avg_color = result of function (calculate average color)
-            # for image in images:
-            # similarity = result of compare function
-            # images_arr.append({"url": image.url, "similarity": 0.3})
-            pass
+            input_avg_color = utils.avgColor(input_image)
+            for image in images:
+                similarity = utils.colourDistance(
+                    input_avg_color.tolist(), image.avg_color)
+                images_arr.append({"url": image.url, "similarity": similarity})
 
         elif criteria == "histogram":
             hist = utils.calc_histogram(input_image)
@@ -59,5 +64,7 @@ class Controller:
 
 
 # controller = Controller()
-# print(controller.insert_image("./image/test.jpg"))
-# print(controller.search_for_images("./images/motorbike.jpg", "histogram"))
+
+# print(controller.insert_image("./images/city.jpeg"))
+# print(controller.session.query(Image).all())
+# print(controller.search_for_images("./images/city2.jpeg", "avg_color"))
