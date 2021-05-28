@@ -89,3 +89,29 @@ def compare_object_based(input_frame, stored_frame):
                                 input_frame['objects_freq'][object_name])
 
     return common_objects / stored_frame.objects_count
+
+
+def avgColor (img):
+    height, width, _ = np.shape(img)
+    avg_color_per_row = np.average(img, axis=0)
+    avg_colors = np.average(avg_color_per_row, axis=0)
+    int_averages = np.array(avg_colors, dtype=np.uint64)
+    # for checking 
+    average_image = np.zeros((height, width, 3), np.uint8)
+    average_image[:] = int_averages
+    # cv2.imshow("Avg Color", np.hstack([img, average_image]))
+    # plt.show()
+    return int_averages
+
+def colourDistance ( img1,  img2):
+    rmean = ( img1[0] + img2[0] )/2
+    r = float(img1[0]) - float(img2[0])
+    g = float(img1[1]) - float(img2[1])
+    b = float(img1[2]) - float(img2[2])
+    weightR = 2 + rmean/256
+    weightG = 4.0
+    weightB = 2 + (255-rmean)/256
+    colorDis =  np.sqrt(weightR*r*r + weightG*g*g + weightB*b*b)
+    maxColDist = 764.8339663572415;
+    similarity = round(((maxColDist-colorDis)/maxColDist)*100)
+    return similarity
