@@ -27,9 +27,8 @@ def save_i_keyframes(video_fn):
 
     return frames
 
-
-if __name__ == "__main__":
-    images = save_i_keyframes(videourl)
+def extract_images(video_url):
+        images = save_i_keyframes(videourl)
     basename = "videos/" + os.path.splitext(os.path.basename(videourl))[
         0]+'/'
     if not os.path.exists(basename):
@@ -39,3 +38,7 @@ if __name__ == "__main__":
         print(i)
         outname = basename+'_i_frame_'+str(i)+'.jpg'
         cv2.imwrite(outname, image)
+        
+if __name__ == "__main__":
+    extract_images(videourl)
+
