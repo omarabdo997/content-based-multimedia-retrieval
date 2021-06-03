@@ -28,8 +28,8 @@ def save_i_keyframes(video_fn):
     return frames
 
 def extract_images(video_url):
-        images = save_i_keyframes(videourl)
-    basename = "videos/" + os.path.splitext(os.path.basename(videourl))[
+        images = save_i_keyframes(video_url)
+    basename = "videos/" + os.path.splitext(os.path.basename(video_url))[
         0]+'/'
     if not os.path.exists(basename):
         os.mkdir(path=basename)
