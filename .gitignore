@@ -5,3 +5,4 @@ images/*
 !images/.gitkeep
 videos/*
 !videos/.gitkeep
+*.pyc

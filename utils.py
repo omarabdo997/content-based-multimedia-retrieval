@@ -87,7 +87,8 @@ def compare_object_based(input_frame, stored_frame):
         if object_name in stored_frame.objects_freq:
             common_objects += min(loads(stored_frame.objects_freq)[object_name],
                                 input_frame['objects_freq'][object_name])
-
+    if stored_frame.objects_count == 0:
+        return 0
     return common_objects / stored_frame.objects_count
 
 

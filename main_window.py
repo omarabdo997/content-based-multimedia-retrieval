@@ -7,6 +7,7 @@ from PySide2.QtUiTools import QUiLoader
 from PySide2.QtCore import QFile, QUrl
 from PySide2.QtMultimedia import QMediaPlayer
 from PySide2.QtMultimediaWidgets import QVideoWidget
+from controller import Controller
 
 
 class MainWindow(QMainWindow):
@@ -14,6 +15,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self._setup_ui(ui_file_path)
         self._ui.setWindowTitle("CBMR")
+        self._controller = Controller()
     
     def _load_ui_file(self, ui_file_path):
         loader = QUiLoader()
@@ -56,13 +58,14 @@ class MainWindow(QMainWindow):
         if not self._loaded_image:
             return
         self._set_loading_state(self._ui.search_image_button, True, "Searching...")
+        search_by = ""
         if self._ui.mean_color_radio_button.isChecked():
-            print("mean checked")
+            search_by = "avg_color"
         elif self._ui.color_histogram_button.isChecked():
-            print("histo is checked")
+            search_by = "histogram"
         elif self._ui.object_detection_radio_button.isChecked():
-            print("object is checked")
-        images = ["/home/omar/Documents/content-based-multimedia-retrieval/images/h7zi9s76lv.jpg", "/home/omar/Documents/content-based-multimedia-retrieval/images/h7zi9s76lv.jpg", "/home/omar/Documents/content-based-multimedia-retrieval/images/h7zi9s76lv.jpg", "/home/omar/Documents/content-based-multimedia-retrieval/images/j49yaunz7o.png"]
+            search_by = "objects"
+        images = self._controller.search_for_images(self._loaded_image, search_by)
         self._load_images(images)
         self._set_loading_state(self._ui.search_image_button, False, "Search Image")
     
@@ -89,12 +92,14 @@ class MainWindow(QMainWindow):
     def _on_save_image_button_clicked(self):
         self._set_loading_state(self._ui.save_image_button, True, "Saving...")
         ran = ''.join(random.choices(string.ascii_lowercase + string.digits, k = 10))
-        result = QFile.copy(self._loaded_image,"images/{}.{}".format(ran, self._loaded_image.split(".")[-1]))
+        new_image_path = "images/{}.{}".format(ran, self._loaded_image.split(".")[-1])
+        result = QFile.copy(self._loaded_image, new_image_path)
         if not result:
             self._ui.image_saved_label.setText("Image not saved!")
             self._color_label(self._ui.image_saved_label, "red")
             self._set_loading_state(self._ui.save_image_button, False, "Save Image")
             return
+        self._controller.insert_image(new_image_path)
         self._ui.image_saved_label.setText("Image saved successfully!")
         self._color_label(self._ui.image_saved_label, "blue")
         self._set_loading_state(self._ui.save_image_button, True, "Save Image")
@@ -152,6 +157,7 @@ class MainWindow(QMainWindow):
             child = layout.takeAt(0)
             if child == None:
                 break
+            child.widget().setParent(None)
             del child
     
     def _load_images(self, images):

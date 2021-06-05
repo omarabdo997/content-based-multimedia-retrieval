@@ -40,14 +40,18 @@ class Controller:
             for image in images:
                 similarity = utils.colourDistance(
                     input_avg_color.tolist(), image.avg_color)
-                images_arr.append({"url": image.url, "similarity": similarity})
+                print("similarity", similarity)
+                if (similarity > 90):
+                    images_arr.append({"url": image.url, "similarity": similarity})
 
         elif criteria == "histogram":
             hist = utils.calc_histogram(input_image)
             for image in images:
                 similarity = utils.compare_Hist(
                     hist, array(image.histogram, dtype="float32"))
-                images_arr.append({"url": image.url, "similarity": similarity})
+                print("similarity", similarity)
+                if(similarity > 0.8):
+                    images_arr.append({"url": image.url, "similarity": similarity})
 
         elif criteria == "objects":
             objects_freq, objects_count = utils.get_objects(input_url)
@@ -55,7 +59,8 @@ class Controller:
                            "objects_count": objects_count}
             for image in images:
                 similarity = utils.compare_object_based(input_frame, image)
-                images_arr.append({"url": image.url, "similarity": similarity})
+                if(similarity > 0.6):
+                    images_arr.append({"url": image.url, "similarity": similarity})
 
         images_arr = sorted(
             images_arr, key=lambda i: i["similarity"], reverse=True)
