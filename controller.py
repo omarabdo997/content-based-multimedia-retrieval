@@ -130,10 +130,10 @@ class Controller:
         print("video urls", videos_urls)
         return videos_urls    
 
-controller = Controller()
+#controller = Controller()
 
 # print(controller.insert_image("./images/city.jpeg"))
 # print(controller.session.query(Image).all())
 # print(controller.search_for_images("./images/city2.jpeg", "avg_color"))
 # print(controller.session.query(Video).all()[3].images)
-controller.search_for_videos("/home/omar/Videos/loading.mp4", "avg_color")
+#controller.search_for_videos("/home/omar/Videos/loading.mp4", "avg_color")
