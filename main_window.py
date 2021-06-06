@@ -66,6 +66,7 @@ class MainWindow(QMainWindow):
         elif self._ui.object_detection_radio_button.isChecked():
             search_by = "objects"
         images = self._controller.search_for_images(self._loaded_image, search_by)
+        print(images)
         self._load_images(images)
         self._set_loading_state(self._ui.search_image_button, False, "Search Image")
     
@@ -73,13 +74,12 @@ class MainWindow(QMainWindow):
         if not self._loaded_video:
             return
         self._set_loading_state(self._ui.search_video_button, True, "Searching...")
+        search_by = ""
         if self._ui.mean_color_radio_button_2.isChecked():
-            print("mean checked")
+            search_by = "avg_color"
         elif self._ui.color_histogram_button_2.isChecked():
-            print("histo is checked")
-        elif self._ui.object_detection_radio_button_2.isChecked():
-            print("object is checked")
-        videos = ["/home/omar/Videos/rviz_2.mp4", "/home/omar/Videos/rviz_2.mp4", "/home/omar/Videos/rviz_2.mp4"]
+            search_by = "histogram"
+        videos = self._controller.search_for_videos(self._loaded_video, search_by)
         self._load_videos(videos)
         self._set_loading_state(self._ui.search_video_button, False, "Search Video")
     
@@ -107,12 +107,14 @@ class MainWindow(QMainWindow):
     def _on_save_video_button_clicked(self):
         self._set_loading_state(self._ui.save_video_button, True, "Saving...")
         ran = ''.join(random.choices(string.ascii_lowercase + string.digits, k = 10))
-        result = QFile.copy(self._loaded_video,"videos/{}.{}".format(ran, self._loaded_video.split(".")[-1]))
+        new_video_path = "videos/{}.{}".format(ran, self._loaded_video.split(".")[-1])
+        result = QFile.copy(self._loaded_video, new_video_path)
         if not result:
             self._ui.video_saved_label.setText("Video not saved!")
             self._color_label(self._ui.video_saved_label, "red")
             self._set_loading_state(self._ui.save_video_button, False, "Save Video")
             return
+        self._controller.insert_video(new_video_path)
         self._ui.video_saved_label.setText("Video saved successfully!")
         self._color_label(self._ui.video_saved_label, "blue")
         print("here")
@@ -157,7 +159,11 @@ class MainWindow(QMainWindow):
             child = layout.takeAt(0)
             if child == None:
                 break
-            child.widget().setParent(None)
+            if (child.layout()):
+                # child.layout().setParent(None)
+                self._clear_layout(child.layout())
+            else:
+                child.widget().setParent(None)
             del child
     
     def _load_images(self, images):
@@ -197,7 +203,8 @@ class MainWindow(QMainWindow):
     def _load_videos(self, videos):
         self._clear_layout(self._ui.video_results_layout)
         for video in videos:
-            self._create_video_player(video)
+            cwd = os.getcwd()+"/"
+            self._create_video_player(cwd + video)
         
     def show(self):
         self._ui.show()

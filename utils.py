@@ -3,7 +3,9 @@ import cv2
 import numpy as np
 from imageai.Detection import ObjectDetection
 import os
+from numpy import array
 from json import loads
+from extract_kf import extract_images
 
 def calc_histogram(image):
     """
@@ -116,3 +118,21 @@ def colourDistance ( avg_img1,  avg_img2):
     maxColDist = 764.8339663572415
     similarity = round(((maxColDist-colorDis)/maxColDist)*100)
     return similarity
+
+def compareVideos(video1_frames, video2_frames, comparisson, threshold):
+    common_frames = 0
+    for frame in video1_frames:
+        for frame2 in video2_frames:
+            if (comparisson == "avg_color"):
+                similarity = colourDistance(frame[comparisson], frame2.avg_color)
+                if similarity > threshold:
+                    common_frames += 1
+                    break
+            if (comparisson == "histogram"):
+                similarity = compare_Hist(
+                    frame[comparisson], array(frame2.histogram, dtype="float32"))
+                if similarity > threshold:
+                    common_frames += 1
+                    break
+    return common_frames / len(video1_frames)
+

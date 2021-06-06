@@ -80,27 +80,27 @@ def insert_video(session, input_video):
         return {"success": False, "message": type(e).__name__}
     else:
         session.commit()
-        return {"success": True, "video": video}
-        # video = session.query(Video).filter_by(url=input_video["url"]).one()
-        # try:
-        #     for frame in input_video["key_frames"]:
-        #         frame["video_id"] = video.id
-        #         image = Image(url=frame["url"],
-        #                       avg_color=frame["avg_color"],
-        #                       histogram=frame["histogram"],
-        #                       objects_freq=dumps(frame["objects_freq"]),
-        #                       objects_count=frame["objects_count"],
-        #                       video_id=frame["video_id"]
-        #                       )
+        video = session.query(Video).filter_by(url=input_video["url"]).one()
+        try:
+            for frame in input_video["key_frames"]:
+                frame["video_id"] = video.id
+                image = Image(url=frame["url"],
+                              avg_color=frame["avg_color"],
+                              histogram=frame["histogram"],
+                              objects_freq=dumps(frame["objects_freq"]),
+                              objects_count=frame["objects_count"],
+                              video_id=frame["video_id"]
+                              )
 
-        #         session.add(image)
-        # except Exception as e:
-        #     session.rollback()
-        #     return {"success": False, "message": type(e).__name__}
-        # else:
-        #     session.commit()
-        #     print("committed!")
-        #     return {"success": True, "video": video}
+                session.add(image)
+        except Exception as e:
+            session.rollback()
+            return {"success": False, "message": type(e).__name__}
+        else:
+            session.commit()
+            print("committed!")
+            return {"success": True, "video": video}
+        
 
 
 # ----------------------------------------------------------------------------------------

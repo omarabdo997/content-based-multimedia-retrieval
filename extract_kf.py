@@ -2,7 +2,7 @@ import cv2
 import os
 import subprocess
 
-videourl = "./videos/lava1.mp4"
+videourl = "./videos/Don't_Talk_to_Strangers.mp4"
 
 
 def get_frame_types(video_fn):
@@ -28,7 +28,8 @@ def save_i_keyframes(video_fn):
     return frames
 
 def extract_images(video_url):
-        images = save_i_keyframes(video_url)
+    images = save_i_keyframes(video_url)
+    images_urls = []
     basename = "videos/" + os.path.splitext(os.path.basename(video_url))[
         0]+'/'
     if not os.path.exists(basename):
@@ -37,8 +38,10 @@ def extract_images(video_url):
     for i, image in enumerate(images):
         print(i)
         outname = basename+'_i_frame_'+str(i)+'.jpg'
+        images_urls.append(outname)
         cv2.imwrite(outname, image)
+    return images_urls
         
 if __name__ == "__main__":
-    extract_images(videourl)
+    print(extract_images(videourl))
 
