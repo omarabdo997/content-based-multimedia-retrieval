@@ -391,7 +391,7 @@
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="search_video_options_layout" stretch="1,2,2,2">
+             <layout class="QHBoxLayout" name="search_video_options_layout" stretch="1,2,2">
               <property name="sizeConstraint">
                <enum>QLayout::SetDefaultConstraint</enum>
               </property>
@@ -413,13 +413,6 @@
                <widget class="QRadioButton" name="color_histogram_button_2">
                 <property name="text">
                  <string>Color Histogram</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="object_detection_radio_button_2">
-                <property name="text">
-                 <string>Object Detection</string>
                 </property>
                </widget>
               </item>
