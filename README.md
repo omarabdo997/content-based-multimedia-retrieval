@@ -11,6 +11,8 @@ Python 3.6 or higher - (https://docs.python.org/3/using/unix.html#getting-and-in
 
 Virtual Enviroment - its recommended to have it installed when working with a python project (https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
 
+Postgresql Data Base (https://www.postgresql.org/download/)
+
 Setup your user and password in the .env file for postgres database on your localhost.
 
 create a virutal env by running the following command:
