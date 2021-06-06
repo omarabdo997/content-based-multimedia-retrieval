@@ -31,6 +31,9 @@ and then install the following dependency:
 sudo apt-get install ffmpeg
 ```
 
+download the following file and put it in the images folder:
+https://github.com/OlafenwaMoses/ImageAI/releases/download/essentials-v5/resnet50_coco_best_v2.1.0.h5/
+
 to run the project after installing the dependecies in the activated enviroment go to the project directory where the main.py file is located and run:
 ```bash
 python main.py
