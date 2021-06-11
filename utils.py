@@ -15,7 +15,7 @@ def calc_histogram(image):
     :param image: the original image 
     :return: hist_base, array of 10 elements with the Noramolized values of image's histogram 
     """
-    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    # hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
     #bins' Number of histogrom 
     h_bins = 1
@@ -31,7 +31,7 @@ def calc_histogram(image):
     channels = [0, 1]
     
     #calculate the histogram of image
-    hist_base = cv2.calcHist([ hsv_image], channels, None, histSize, ranges, accumulate=False)
+    hist_base = cv2.calcHist([image], channels, None, histSize, ranges, accumulate=False)
     
     #alpha to beta is range of Normalize
     cv2.normalize(hist_base, hist_base, alpha=0, beta=100 , norm_type=cv2.NORM_MINMAX)
