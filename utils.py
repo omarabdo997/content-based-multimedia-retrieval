@@ -7,6 +7,7 @@ from numpy import array
 from json import loads
 from extract_kf import extract_images
 
+
 def calc_histogram(image):
     """
     calc_histogram
@@ -14,24 +15,26 @@ def calc_histogram(image):
     :param image: the original image 
     :return: hist_base, array of 10 elements with the Noramolized values of image's histogram 
     """
+    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
     #bins' Number of histogrom 
     h_bins = 1
     s_bins = 10
     histSize = [h_bins, s_bins]
     
-    #range of histogram
-    h_ranges = [0, 180]
-    s_ranges = [0, 256]
-    ranges = h_ranges + s_ranges
+    #range of histogram hue 0 to 179, saturation 0 to 255
+    hue_ranges = [0, 180]
+    satr_ranges = [0, 256]
+    ranges = hue_ranges + satr_ranges
     
     # Use the 0-th and 1-st channels
     channels = [0, 1]
     
     #calculate the histogram of image
-    hist_base = cv2.calcHist([image], channels, None, histSize, ranges, accumulate=False)
+    hist_base = cv2.calcHist([ hsv_image], channels, None, histSize, ranges, accumulate=False)
     
     #alpha to beta is range of Normalize
-    cv2.normalize(hist_base, hist_base, alpha=0, beta=100, norm_type=cv2.NORM_MINMAX)
+    cv2.normalize(hist_base, hist_base, alpha=0, beta=100 , norm_type=cv2.NORM_MINMAX)
     return hist_base
 
 
@@ -41,24 +44,13 @@ def compare_Hist(hist_input , hist_img):
      get a numerical value that express how well two histograms match with each other by Correlation method.
     :param hist_input: the histogram of input image 
     :param hist_img:  the histogram of image from Database
-    :return: "true", when the value of compression is larger then or equal 0.5
-    :return: "false", when the value of compression is smaller then 0.5
+    :return: numerical value of comparing the 2 histograms
     """
-    compare_value = cv2.compareHist(hist_input, hist_img, cv2.HISTCMP_CORREL)
-    # if compare_value >= 0.5:
-    #     return "true" 
-    # else:
-    #     return "false"
+    hist_input_1d = hist_input.squeeze()
+    hist_img_1d = hist_img.squeeze()
+
+    compare_value = cv2.compareHist(hist_input_1d , hist_img_1d , cv2.HISTCMP_CORREL)
     return compare_value 
-
-# ###to test  calc_histogram && compare_Hist functions
-# src_base = cv2.imread('test_images/Histogram_Comparison_Source_0.jpg')
-# src_test1 = cv2.imread('test_images/Histogram_Comparison_Source_1.jpg')
-# src_test2 = cv2.imread('test_images/Histogram_Comparison_Source_2.jpg')
-
-# h1 = calc_histogram(src_base)
-# h2 = calc_histogram(src_test1)
-# print (compare_Hist(h1,h2))  
 
 
 def get_objects(path):
@@ -135,4 +127,3 @@ def compareVideos(video1_frames, video2_frames, comparisson, threshold):
                     common_frames += 1
                     break
     return common_frames / len(video1_frames)
-
