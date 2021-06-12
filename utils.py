@@ -18,8 +18,8 @@ def calc_histogram(image):
     # hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
     #bins' Number of histogrom 
-    h_bins = 1
-    s_bins = 10
+    h_bins = 5
+    s_bins = 5
     histSize = [h_bins, s_bins]
     
     #range of histogram hue 0 to 179, saturation 0 to 255
@@ -123,7 +123,7 @@ def compareVideos(video1_frames, video2_frames, comparisson, threshold):
             if (comparisson == "histogram"):
                 similarity = compare_Hist(
                     frame[comparisson], array(frame2.histogram, dtype="float32"))
-                if similarity > threshold:
+                if similarity >= threshold:
                     common_frames += 1
                     break
     return common_frames / len(video1_frames)

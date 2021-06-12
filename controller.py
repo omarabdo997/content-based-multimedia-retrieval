@@ -120,17 +120,16 @@ class Controller:
             if (criteria == "avg_color"):
                 similarity = utils.compareVideos(input_images_processed, images, "avg_color", 90)
             if (criteria == "histogram"):
-                similarity = utils.compareVideos(input_images_processed, images, "histogram", 0.9)
-            if(similarity > 0.8):
+                similarity = utils.compareVideos(input_images_processed, images, "histogram", 0.8)
+            if(similarity >= 0.8):
                     videos_arr.append({"url": video.url, "similarity": similarity})
         videos_arr = sorted(
             videos_arr, key=lambda i: i["similarity"], reverse=True)
         shutil.rmtree(os.path.dirname(input_images[0]))
         videos_urls = [i["url"] for i in videos_arr]
-        print("video urls", videos_urls)
         return videos_urls    
 
-#controller = Controller()
+
 
 # print(controller.insert_image("./images/city.jpeg"))
 # print(controller.session.query(Image).all())
