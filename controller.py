@@ -61,6 +61,7 @@ class Controller:
 
         images = self.session.query(Image).filter_by(video_id=None)
         images_arr = []
+        
 
         if criteria == "avg_color":
             input_avg_color = utils.avgColor(input_image)
@@ -131,8 +132,3 @@ class Controller:
 
 
 
-# print(controller.insert_image("./images/city.jpeg"))
-# print(controller.session.query(Image).all())
-# print(controller.search_for_images("./images/city2.jpeg", "avg_color"))
-# print(controller.session.query(Video).all()[3].images)
-#controller.search_for_videos("/home/omar/Videos/loading.mp4", "avg_color")
